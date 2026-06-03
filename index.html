@@ -1,0 +1,1356 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>GéNova — Freelance & Technicien Informatique</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome pour les icônes -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* =========================================
+           VARIABLES ET RESET
+        ========================================= */
+        :root {
+            --bg-dark: #0f172a;        /* Fond principal */
+            --bg-card: rgba(30, 41, 59, 0.7); /* Fond des cartes */
+            --text-main: #f8fafc;      /* Texte principal */
+            --text-muted: #94a3b8;     /* Texte secondaire */
+            --accent-primary: #0ea5e9; /* Bleu cyan */
+            --accent-secondary: #3b82f6; /* Bleu roi */
+            --accent-gradient: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            --radius: 16px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            line-height: 1.6;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(14, 165, 233, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 85% 30%, rgba(59, 130, 246, 0.08) 0%, transparent 50%);
+            background-attachment: fixed;
+        }
+
+        /* =========================================
+           TYPOGRAPHIE ET UTILITAIRES
+        ========================================= */
+        h1, h2, h3, h4 {
+            line-height: 1.2;
+            font-weight: 700;
+        }
+
+        h2 {
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .container {
+            max-width: 1140px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        .section {
+            padding: 100px 0;
+        }
+
+        /* Animation Scroll Reveal */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease-out;
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* =========================================
+           BOUTONS
+        ========================================= */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: var(--transition);
+            cursor: pointer;
+            border: none;
+            font-family: inherit;
+            font-size: 1rem;
+            gap: 8px;
+        }
+
+        .btn.primary {
+            background: var(--accent-gradient);
+            color: white;
+            box-shadow: 0 4px 15px rgba(14, 165, 233, 0.3);
+        }
+
+        .btn.primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(14, 165, 233, 0.4);
+        }
+
+        .btn.outline {
+            background: transparent;
+            color: var(--accent-primary);
+            border: 2px solid var(--accent-primary);
+        }
+
+        .btn.outline:hover {
+            background: rgba(14, 165, 233, 0.1);
+        }
+
+        /* =========================================
+           HEADER & NAVIGATION
+        ========================================= */
+        .site-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            transition: var(--transition);
+        }
+
+        .header-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 80px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+
+        .brand-logo {
+            height: 40px;
+            width: auto;
+            border-radius: 8px;
+            object-fit: contain;
+        }
+
+        .brand-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .logo-name {
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: white;
+            letter-spacing: 1px;
+            line-height: 1.1;
+        }
+
+        .tag {
+            color: var(--accent-primary);
+            font-size: 0.75rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .site-nav {
+            display: flex;
+            gap: 5px;
+        }
+
+        .site-nav a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.95rem;
+            padding: 8px 16px;
+            border-radius: 6px;
+            transition: var(--transition);
+            font-weight: 500;
+        }
+
+        .site-nav a:hover {
+            color: white;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .nav-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* =========================================
+           HERO SECTION
+        ========================================= */
+        .hero {
+            padding-top: 160px;
+            padding-bottom: 60px;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+        }
+
+        .hero-grid {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 40px;
+            align-items: center;
+        }
+
+        .hi {
+            color: var(--accent-primary);
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 16px;
+            display: inline-block;
+            padding: 6px 12px;
+            background: rgba(14, 165, 233, 0.1);
+            border-radius: 20px;
+        }
+
+        .hero .title {
+            font-size: 3.5rem;
+            margin-bottom: 24px;
+            letter-spacing: -1px;
+        }
+
+        .hero .subtitle {
+            color: var(--text-muted);
+            font-size: 1.2rem;
+            margin-bottom: 32px;
+            max-width: 90%;
+        }
+
+        .hero-ctas {
+            display: flex;
+            gap: 16px;
+        }
+
+        .hero-photo-wrap {
+            position: relative;
+            display: flex;
+            justify-content: center;
+        }
+
+        .hero-photo-wrap::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: var(--accent-gradient);
+            border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+            filter: blur(40px);
+            opacity: 0.3;
+            animation: morph 8s ease-in-out infinite;
+            z-index: -1;
+        }
+
+        @keyframes morph {
+            0%, 100% { border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%; }
+            50% { border-radius: 70% 30% 30% 70% / 70% 70% 30% 30%; }
+        }
+
+        .hero-photo {
+            width: 100%;
+            max-width: 400px;
+            aspect-ratio: 1/1;
+            object-fit: cover;
+            border-radius: 24px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        /* =========================================
+           A PROPOS
+        ========================================= */
+        .about-grid {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .about-photo img {
+            width: 100%;
+            border-radius: var(--radius);
+            box-shadow: 20px 20px 0 rgba(14, 165, 233, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .about-text h2 {
+            text-align: left;
+        }
+
+        .about-text p {
+            margin-bottom: 16px;
+            color: var(--text-muted);
+            font-size: 1.1rem;
+        }
+
+        .about-text strong {
+            color: var(--text-main);
+        }
+
+        .about-actions {
+            margin-top: 32px;
+            display: flex;
+            gap: 16px;
+        }
+
+        /* =========================================
+           PARCOURS (Timeline)
+        ========================================= */
+        .timeline {
+            position: relative;
+            max-width: 800px;
+            margin: 0 auto;
+            padding-left: 30px;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 40px;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -36px;
+            top: 6px;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: var(--accent-primary);
+            box-shadow: 0 0 10px var(--accent-primary);
+        }
+
+        .timeline-year {
+            font-weight: 700;
+            color: var(--accent-primary);
+            margin-bottom: 8px;
+            font-size: 1.1rem;
+        }
+
+        .timeline-body {
+            background: var(--bg-card);
+            padding: 24px;
+            border-radius: var(--radius);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .timeline-body h3 {
+            margin-bottom: 8px;
+            font-size: 1.2rem;
+            color: white;
+        }
+
+        .timeline-body p {
+            color: var(--text-muted);
+        }
+
+        /* =========================================
+           SERVICES
+        ========================================= */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+        }
+
+        .card {
+            background: var(--bg-card);
+            padding: 32px;
+            border-radius: var(--radius);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: var(--transition);
+            backdrop-filter: blur(10px);
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            border-color: rgba(14, 165, 233, 0.3);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .card-icon {
+            font-size: 2.5rem;
+            color: var(--accent-primary);
+            margin-bottom: 20px;
+        }
+
+        .card h3 {
+            margin-bottom: 12px;
+            font-size: 1.25rem;
+        }
+
+        .card p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        /* =========================================
+           COMPETENCES
+        ========================================= */
+        .skills-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .skill {
+            margin-bottom: 24px;
+        }
+
+        .skill-head {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .skill-head span:last-child {
+            color: var(--accent-primary);
+        }
+
+        .skill-bar-bg {
+            background: rgba(255, 255, 255, 0.05);
+            height: 8px;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .skill-bar {
+            height: 100%;
+            background: var(--accent-gradient);
+            border-radius: 4px;
+            width: 0; /* Animated via JS */
+            transition: width 1.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+
+        /* =========================================
+           PROJETS & GRAPHISME
+        ========================================= */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .gallery-item {
+            position: relative;
+            border-radius: var(--radius);
+            overflow: hidden;
+            aspect-ratio: 4/3;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            group: hover;
+        }
+
+        .gallery-item img, .gallery-item video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition);
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.05);
+        }
+
+        .gallery-caption {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(15, 23, 42, 0.9), transparent);
+            padding: 24px 16px 16px;
+            transform: translateY(100%);
+            transition: var(--transition);
+        }
+
+        .gallery-item:hover .gallery-caption {
+            transform: translateY(0);
+        }
+
+        .gallery-caption p {
+            margin: 0;
+            font-weight: 600;
+            color: white;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+        }
+
+        /* =========================================
+           CARTE PROFESSIONNELLE (CP)
+        ========================================= */
+        .cp-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+        
+        .cp-info h2 {
+            text-align: left;
+            margin-bottom: 16px;
+        }
+
+        .cp-info p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            margin-bottom: 24px;
+        }
+
+        .business-card-modern {
+            position: relative;
+            background: rgba(30, 41, 59, 0.4);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 32px;
+            width: 100%;
+            max-width: 450px;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            overflow: hidden;
+            margin: 0 auto;
+            transform-style: preserve-3d;
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .business-card-modern:hover {
+            transform: translateY(-5px) scale(1.02);
+            border-color: rgba(14, 165, 233, 0.3);
+            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+        }
+
+        .bc-circle-1, .bc-circle-2 {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(40px);
+            z-index: -1;
+            transition: all 0.5s ease;
+        }
+
+        .business-card-modern:hover .bc-circle-1 {
+            transform: scale(1.2) translate(-10px, 10px);
+            opacity: 0.6;
+        }
+
+        .business-card-modern:hover .bc-circle-2 {
+            transform: scale(1.2) translate(10px, -10px);
+            opacity: 0.5;
+        }
+
+        .bc-circle-1 {
+            top: -50px;
+            right: -50px;
+            width: 150px;
+            height: 150px;
+            background: var(--accent-primary);
+            opacity: 0.3;
+        }
+
+        .bc-circle-2 {
+            bottom: -50px;
+            left: -50px;
+            width: 100px;
+            height: 100px;
+            background: var(--accent-secondary);
+            opacity: 0.2;
+        }
+
+        .bc-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 40px;
+        }
+
+        .bc-logo-img {
+            height: 48px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+
+        .bc-role {
+            text-align: right;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        .bc-middle {
+            margin-bottom: 30px;
+        }
+
+        .bc-middle h3 {
+            font-size: 1.8rem;
+            margin-bottom: 4px;
+            color: white;
+            letter-spacing: -0.5px;
+        }
+
+        .bc-company {
+            color: var(--accent-primary);
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .bc-bottom {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .bc-contact-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 0.95rem;
+            color: var(--text-main);
+        }
+
+        .bc-contact-item i {
+            color: var(--accent-primary);
+            width: 24px;
+            height: 24px;
+            background: rgba(14, 165, 233, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+        }
+
+        /* =========================================
+           CV & CONTACT
+        ========================================= */
+        .cv-modern-wrap {
+            background: linear-gradient(145deg, rgba(30, 41, 59, 0.6), rgba(15, 23, 42, 0.9));
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 24px;
+            padding: 48px;
+            display: flex;
+            align-items: center;
+            gap: 40px;
+            max-width: 900px;
+            margin: 0 auto;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .cv-icon-large {
+            font-size: 4rem;
+            color: var(--accent-primary);
+            background: rgba(14, 165, 233, 0.1);
+            width: 120px;
+            height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            flex-shrink: 0;
+            box-shadow: inset 0 0 20px rgba(14, 165, 233, 0.2);
+            border: 1px solid rgba(14, 165, 233, 0.2);
+        }
+
+        .cv-content h3 {
+            font-size: 1.8rem;
+            margin-bottom: 12px;
+            color: white;
+        }
+
+        .cv-content p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            margin-bottom: 24px;
+        }
+
+        .cv-buttons {
+            display: flex;
+            gap: 16px;
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 40px;
+        }
+
+        .contact-info {
+            padding: 32px;
+            background: var(--bg-card);
+            border-radius: var(--radius);
+        }
+
+        .contact-info h3 {
+            font-size: 1.5rem;
+            margin-bottom: 8px;
+        }
+
+        .contact-info p {
+            color: var(--text-muted);
+            margin-bottom: 24px;
+        }
+
+        .contact-details {
+            list-style: none;
+        }
+
+        .contact-details li {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 16px;
+            color: var(--text-main);
+        }
+
+        .contact-details i {
+            background: rgba(14, 165, 233, 0.1);
+            color: var(--accent-primary);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+        }
+
+        .contact-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-group label {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .form-group input, 
+        .form-group select, 
+        .form-group textarea {
+            width: 100%;
+            padding: 14px 16px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(0, 0, 0, 0.2);
+            color: white;
+            font-family: inherit;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .form-group select option {
+            background: var(--bg-dark);
+            color: white;
+        }
+
+        .form-group input:focus, 
+        .form-group select:focus, 
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+            background: rgba(0, 0, 0, 0.4);
+            box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.1);
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 16px;
+            margin-top: 8px;
+        }
+
+        /* =========================================
+           FOOTER
+        ========================================= */
+        .site-footer {
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 32px 0;
+            background: #090e17;
+            color: var(--text-muted);
+        }
+
+        .footer-inner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .socials {
+            display: flex;
+            gap: 16px;
+        }
+
+        .socials a {
+            color: var(--text-muted);
+            text-decoration: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+
+        .socials a:hover {
+            background: var(--accent-primary);
+            color: white;
+            transform: translateY(-3px);
+        }
+
+        /* =========================================
+           RESPONSIVE
+        ========================================= */
+        @media (max-width: 992px) {
+            .hero-grid { grid-template-columns: 1fr; text-align: center; }
+            .hero .title { font-size: 2.8rem; }
+            .hero .subtitle { margin: 0 auto 32px; }
+            .hero-ctas { justify-content: center; }
+            .hero-photo-wrap { grid-row: 1; margin-bottom: 20px; }
+            
+            .about-grid { grid-template-columns: 1fr; text-align: center; }
+            .about-photo { max-width: 400px; margin: 0 auto; }
+            .about-text h2 { text-align: center; }
+            .about-actions { justify-content: center; }
+            
+            .cp-layout { grid-template-columns: 1fr; text-align: center; }
+            .cp-info h2 { text-align: center; }
+            .cv-modern-wrap { flex-direction: column; text-align: center; padding: 32px 20px; }
+            .cv-buttons { justify-content: center; flex-wrap: wrap; }
+
+            .contact-grid { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 768px) {
+            .nav-toggle { display: block; }
+            
+            .site-nav {
+                position: absolute;
+                top: 80px;
+                left: 0;
+                width: 100%;
+                background: rgba(15, 23, 42, 0.98);
+                flex-direction: column;
+                padding: 24px;
+                gap: 16px;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+                clip-path: polygon(0 0, 100% 0, 100% 0, 0 0);
+                transition: clip-path 0.4s ease-in-out;
+            }
+
+            .site-nav.open {
+                clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+            }
+
+            .site-nav a {
+                font-size: 1.1rem;
+                padding: 12px;
+                text-align: center;
+            }
+
+            h2 { font-size: 2rem; }
+            .section { padding: 60px 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- HEADER -->
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="#home" class="brand">
+                <!-- Remplacer logo.jpg par le chemin réel de ton logo -->
+                <img src="logo.jpg" alt="Logo GéNova" class="brand-logo" onerror="this.src='https://placehold.co/100x40/0ea5e9/ffffff?text=LOGO'">
+                <div class="brand-text">
+                    <span class="logo-name">GéNova</span>
+                    <small class="tag">Freelance · IT Tech</small>
+                </div>
+            </a>
+            
+            <button class="nav-toggle" aria-label="Menu" id="mobile-menu-btn">
+                <i class="fas fa-bars"></i>
+            </button>
+
+            <nav class="site-nav" id="main-nav">
+                <a href="#home">Accueil</a>
+                <a href="#about">À propos</a>
+                <a href="#parcours">Parcours</a>
+                <a href="#services">Services</a>
+                <a href="#skills">Compétences</a>
+                <a href="#projects">Projets</a>
+                <a href="#contact">Contact</a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <!-- HERO SECTION -->
+        <section id="home" class="hero">
+            <div class="container hero-grid">
+                <div class="hero-text reveal">
+                    <span class="hi">👋 Bonjour, je suis Géraud</span>
+                    <h1 class="title">Développeur Web & Technicien Informatique</h1>
+                    <p class="subtitle">
+                        Ensemble, innovons le monde du numérique chez nous et en <strong>Afrique</strong>. Je crée des solutions digitales performantes et assure la maintenance de vos systèmes.
+                    </p>
+                    <div class="hero-ctas">
+                        <a class="btn primary" href="#contact"><i class="fas fa-envelope"></i> Me contacter</a>
+                        <a class="btn outline" href="#projects"><i class="fas fa-code"></i> Voir mes projets</a>
+                    </div>
+                </div>
+
+                <div class="hero-photo-wrap reveal" style="transition-delay: 0.2s;">
+                    <!-- Placeholder de qualité pour remplacer l'image locale en attendant -->
+                    <img src="moi.jpg" alt="Géraud - Profil" class="hero-photo">
+                </div>
+            </div>
+        </section>
+
+        <!-- A PROPOS -->
+        <section id="about" class="section" style="background: rgba(255,255,255,0.01);">
+            <div class="container about-grid">
+                <div class="about-photo reveal">
+                    <img src="Genova.jpeg" alt="Espace de travail GéNova">
+                </div>
+                <div class="about-text reveal" style="transition-delay: 0.2s;">
+                    <h2>À propos de moi</h2>
+                    <p>
+                        Informaticien et développeur web freelance, passionné par les technologies numériques et l'innovation. À travers ma micro-entreprise <strong>GéNova</strong>, j’accompagne les PME dans la création, l’optimisation et la maintenance de leurs solutions digitales.
+                    </p>
+                    <p>
+                        Spécialisé dans le <strong>développement d’interfaces modernes</strong>, la <strong>mise en place de systèmes informatiques</strong> et la <strong>maintenance technique</strong>, j’allie performance, efficacité et fiabilité. 
+                    </p>
+                    <p style="color: var(--accent-primary); font-weight: 500; font-style: italic; margin-top: 10px;">
+                        "Toujours à l’écoute, disponible et orienté résultat."
+                    </p>
+
+                    <div class="about-actions">
+                        <a class="btn primary" href="#contact">Demander un devis</a>
+                        <a class="btn outline" href="#CV">Mon CV</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PARCOURS -->
+        <section id="parcours" class="section">
+            <div class="container">
+                <h2 class="reveal">Mon Parcours</h2>
+                <div class="timeline">
+                    
+                    <div class="timeline-item reveal">
+                        <div class="timeline-year">2025 — Aujourd'hui</div>
+                        <div class="timeline-body">
+                            <h3>GéNova — Freelance</h3>
+                            <p>Prestation de services web & informatique pour PME et entrepreneurs. Accompagnement technique de A à Z.</p>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item reveal">
+                        <div class="timeline-year">2025</div>
+                        <div class="timeline-body">
+                            <h3>Diplôme Technicien (DT-IMI) & Dev Web</h3>
+                            <p>Obtention du DT-IMI garantissant de solides bases en informatique. Apprentissage approfondi des fondamentaux du Web : HTML, CSS, JS et outils de développement modernes.</p>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item reveal">
+                        <div class="timeline-year">2023 — 2025</div>
+                        <div class="timeline-body">
+                            <h3>Stage technique en Entreprise</h3>
+                            <p>Installation de postes clients, configuration réseau, administration de base et support aux utilisateurs.</p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- SERVICES -->
+        <section id="services" class="section" style="background: rgba(255,255,255,0.01);">
+            <div class="container">
+                <h2 class="reveal">Mes Services</h2>
+                <div class="cards-grid">
+                    
+                    <article class="card reveal">
+                        <i class="fas fa-laptop-code card-icon"></i>
+                        <h3>Création de site web</h3>
+                        <p>Conception de sites vitrines modernes, responsives et parfaitement optimisés pour le référencement (SEO).</p>
+                    </article>
+
+                    <article class="card reveal" style="transition-delay: 0.1s;">
+                        <i class="fas fa-server card-icon"></i>
+                        <h3>Installation & Maintenance</h3>
+                        <p>Mise en place d'infrastructures informatiques, maintenance préventive matérielle et logicielle.</p>
+                    </article>
+
+                    <article class="card reveal" style="transition-delay: 0.2s;">
+                        <i class="fas fa-headset card-icon"></i>
+                        <h3>Support Technique</h3>
+                        <p>Assistance rapide à distance ou sur site. Diagnostic précis et dépannage fiable de vos équipements.</p>
+                    </article>
+
+                    <article class="card reveal" style="transition-delay: 0.3s;">
+                        <i class="fas fa-shopping-cart card-icon"></i>
+                        <h3>Site E-commerce</h3>
+                        <p>Développement de boutiques en ligne sécurisées, intuitives et faciles à gérer au quotidien.</p>
+                    </article>
+
+                    <article class="card reveal" style="transition-delay: 0.4s;">
+                        <i class="fas fa-pen-nib card-icon"></i>
+                        <h3>Design Graphique</h3>
+                        <p>Création d'identités visuelles impactantes : logos, flyers, affiches et supports digitaux pour vos réseaux sociaux.</p>
+                    </article>
+
+                    <article class="card reveal" style="transition-delay: 0.5s;">
+                        <i class="fas fa-shield-halved card-icon"></i>
+                        <h3>Optimisation & Sécurité</h3>
+                        <p>Tuning des performances de vos systèmes et renforcement proactif de la sécurité de vos données.</p>
+                    </article>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- COMPETENCES -->
+        <section id="skills" class="section">
+            <div class="container">
+                <h2 class="reveal">Mes Compétences</h2>
+                <div class="skills-container">
+                    
+                    <div class="skill reveal">
+                        <div class="skill-head"><span>HTML5 / Structure</span><span>100%</span></div>
+                        <div class="skill-bar-bg"><div class="skill-bar" data-width="100%"></div></div>
+                    </div>
+
+                    <div class="skill reveal">
+                        <div class="skill-head"><span>CSS3 / Design UI</span><span>95%</span></div>
+                        <div class="skill-bar-bg"><div class="skill-bar" data-width="95%"></div></div>
+                    </div>
+
+                    <div class="skill reveal">
+                        <div class="skill-head"><span>Maintenance & Réseaux</span><span>90%</span></div>
+                        <div class="skill-bar-bg"><div class="skill-bar" data-width="90%"></div></div>
+                    </div>
+
+                    <div class="skill reveal">
+                        <div class="skill-head"><span>Design Graphique</span><span>85%</span></div>
+                        <div class="skill-bar-bg"><div class="skill-bar" data-width="85%"></div></div>
+                    </div>
+
+                    <div class="skill reveal">
+                        <div class="skill-head"><span>Langage C</span><span>70%</span></div>
+                        <div class="skill-bar-bg"><div class="skill-bar" data-width="70%"></div></div>
+                    </div>
+
+                    <div class="skill reveal">
+                        <div class="skill-head"><span>Virtualisation</span><span>60%</span></div>
+                        <div class="skill-bar-bg"><div class="skill-bar" data-width="60%"></div></div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- PROJETS & GRAPHISME COMBINÉS -->
+        <section id="projects" class="section" style="background: rgba(255,255,255,0.01);">
+            <div class="container">
+                <h2 class="reveal">Portfolio & Réalisations</h2>
+                
+                <!-- Remplacés par des images Unsplash pour la démo, remplacez les "src" par vos vrais chemins locaux -->
+                <div class="gallery-grid">
+                    
+                    <div class="gallery-item reveal">
+                        <img src="Projet img/projet1.PNG" alt="Site vitrine">
+                        <div class="gallery-caption"><p>Projet 1 — Site vitrine</p></div>
+                    </div>
+
+                    <div class="gallery-item reveal" style="transition-delay: 0.1s;">
+                        <img src="Projet img/projet2.jpg" alt="Réseaux & Installation">
+                        <div class="gallery-caption"><p>Projet 2 — Installation Réseau / Antenne</p></div>
+                    </div>
+
+                    <div class="gallery-item reveal" style="transition-delay: 0.2s;">
+                        <img src="Projet img/projet3.jpeg" alt="Design Graphique">
+                        <div class="gallery-caption"><p>Projet 3 — Création de Flyers</p></div>
+                    </div>
+
+                    <div class="gallery-item reveal" style="transition-delay: 0.3s;">
+                        <img src="https://images.unsplash.com/photo-1558655146-d09347e92766?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Design Branding">
+                        <div class="gallery-caption"><p>Projet 4 — Identité visuelle</p></div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- CARTE PROFESSIONNELLE -->
+        <section id="CP" class="section">
+            <div class="container">
+                <div class="cp-layout">
+                    <div class="cp-info reveal">
+                        <span class="hi">Digital</span>
+                        <h2>Ma Carte de Visite</h2>
+                        <p>Gardez mes coordonnées à portée de main ! Enregistrez directement mes informations pour vos futurs projets informatiques et de développement web.</p>
+                        <a href="#contact" class="btn primary"><i class="fas fa-address-book"></i> M'ajouter à vos contacts</a>
+                    </div>
+                    
+                    <div class="cp-wrapper reveal" style="transition-delay: 0.2s;">
+                        <div class="business-card-modern">
+                            <div class="bc-top">
+                                <!-- Remplacer logo.jpg par ton logo -->
+                                <img src="logo.jpg" alt="Logo" class="bc-logo-img" onerror="this.src='https://placehold.co/50x50/0ea5e9/ffffff?text=G'">
+                                <div class="bc-role">Technicien Informatique<br>& Développeur Web</div>
+                            </div>
+                            <div class="bc-middle">
+                                <h3>Géraud LISSANON</h3>
+                                <p class="bc-company">GéNova Freelance</p>
+                            </div>
+                            <div class="bc-bottom">
+                                <div class="bc-contact-item"><i class="fab fa-whatsapp"></i> +229 01 44 41 65 54</div>
+                                <div class="bc-contact-item"><i class="fas fa-envelope"></i> senakponlissanon@gmail.com</div>
+                                <div class="bc-contact-item"><i class="fas fa-map-marker-alt"></i> Cotonou, Bénin</div>
+                            </div>
+                            <!-- Cercles décoratifs (effet visuel) -->
+                            <div class="bc-circle-1"></div>
+                            <div class="bc-circle-2"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CV SECTION -->
+        <section id="CV" class="section" style="background: rgba(255,255,255,0.01);">
+            <div class="container">
+                <h2 class="reveal">Curriculum Vitae</h2>
+                
+                <div class="cv-modern-wrap reveal">
+                    <div class="cv-icon-large">
+                        <i class="fas fa-file-pdf"></i>
+                    </div>
+                    <div class="cv-content">
+                        <h3>Découvrez mon profil détaillé</h3>
+                        <p>Plutôt que d'afficher un long document ici, je vous invite à consulter ou télécharger mon CV complet au format PDF. Vous y trouverez l'intégralité de mon parcours, mes diplômes et mes compétences.</p>
+                        <div class="cv-buttons">
+                            <!-- Les liens pointent vers ton fichier CV MOI.pdf -->
+                            <a href="CV MOI.pdf" target="_blank" class="btn primary"><i class="fas fa-eye"></i> Consulter en ligne</a>
+                            <a href="CV MOI.pdf" download="CV_Geraud_LISSANON.pdf" class="btn outline"><i class="fas fa-download"></i> Télécharger le PDF</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CONTACT -->
+        <section id="contact" class="section">
+            <div class="container">
+                <h2 class="reveal">Contactez-moi</h2>
+                
+                <div class="contact-grid">
+                    
+                    <div class="contact-info reveal">
+                        <h3>Démarrons un projet ensemble</h3>
+                        <p>Vous avez besoin d'un dépannage informatique, d'un site web ou d'une affiche ? N'hésitez pas à m'écrire, je réponds rapidement.</p>
+                        
+                        <ul class="contact-details">
+                            <li>
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span>Cotonou, Bénin</span>
+                            </li>
+                            <li>
+                                <i class="fas fa-phone-alt"></i>
+                                <span>+229 50 88 75 01 / 01 44 41 65 54</span>
+                            </li>
+                            <li>
+                                <i class="fas fa-envelope"></i>
+                                <span>senakponlissanon@gmail.com</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <form class="contact-form reveal" style="transition-delay: 0.2s;" onsubmit="alert('Merci pour votre message ! (Ceci est une simulation de formulaire)'); return false;">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                            <div class="form-group">
+                                <label for="name">Nom complet</label>
+                                <input type="text" id="name" required placeholder="Votre nom">
+                            </div>
+                            <div class="form-group">
+                                <label for="sexe">Sexe</label>
+                                <select id="sexe" required>
+                                    <option value="" disabled selected>Sélectionnez</option>
+                                    <option value="Homme">Homme</option>
+                                    <option value="Femme">Femme</option>
+                                    <option value="Entreprise">Entreprise / Autre</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email">Adresse Email</label>
+                            <input type="email" id="email" required placeholder="votre@email.com">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="message">Votre Message</label>
+                            <textarea id="message" rows="5" required placeholder="Décrivez votre projet ou votre besoin en assistance..."></textarea>
+                        </div>
+
+                        <div class="form-actions">
+                            <button class="btn primary" type="submit"><i class="fas fa-paper-plane"></i> Envoyer le message</button>
+                            <button class="btn outline" type="reset">Réinitialiser</button>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="site-footer">
+        <div class="container footer-inner">
+            <div>&copy; <span id="year"></span> <strong>GéNova</strong> — Tous droits réservés.</div>
+            <div class="socials">
+                <a href="https://www.facebook.com/profil.php?id=61582272295000" target="_blank" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                <a href="#" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- SCRIPTS JS -->
+    <script>
+        // 1. Année dynamique dans le footer
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        // 2. Gestion du menu mobile
+        const btn = document.getElementById('mobile-menu-btn');
+        const nav = document.getElementById('main-nav');
+        const icon = btn.querySelector('i');
+
+        btn.addEventListener('click', () => {
+            nav.classList.toggle('open');
+            if(nav.classList.contains('open')) {
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-times');
+            } else {
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+            }
+        });
+
+        // 3. Smooth scroll et fermeture du menu mobile au clic
+        document.querySelectorAll('.site-nav a').forEach(link => {
+            link.addEventListener('click', e => {
+                const targetId = link.getAttribute('href');
+                if (targetId.startsWith('#')) {
+                    e.preventDefault();
+                    const targetSection = document.querySelector(targetId);
+                    if (targetSection) {
+                        targetSection.scrollIntoView({ behavior: 'smooth' });
+                    }
+                    // Fermer le menu sur mobile
+                    nav.classList.remove('open');
+                    icon.classList.remove('fa-times');
+                    icon.classList.add('fa-bars');
+                }
+            });
+        });
+
+        // 4. Animations au scroll (Intersection Observer)
+        const revealElements = document.querySelectorAll('.reveal');
+        
+        const revealOptions = {
+            threshold: 0.15,
+            rootMargin: "0px 0px -50px 0px"
+        };
+
+        const revealOnScroll = new IntersectionObserver(function(entries, observer) {
+            entries.forEach(entry => {
+                if (!entry.isIntersecting) return;
+                
+                // Active l'animation
+                entry.target.classList.add('active');
+                
+                // Animation spécifique pour les barres de compétences
+                if (entry.target.classList.contains('skill')) {
+                    const bar = entry.target.querySelector('.skill-bar');
+                    if (bar) {
+                        const width = bar.getAttribute('data-width');
+                        // Petit délai pour l'effet visuel
+                        setTimeout(() => {
+                            bar.style.width = width;
+                        }, 300);
+                    }
+                }
+                
+                // Arrête d'observer une fois animé
+                observer.unobserve(entry.target);
+            });
+        }, revealOptions);
+
+        revealElements.forEach(el => {
+            revealOnScroll.observe(el);
+        });
+
+    </script>
+</body>
+</html>
