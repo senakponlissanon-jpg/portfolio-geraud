@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="fr" data-theme="dark">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -13,20 +13,45 @@
     
     <style>
         /* =========================================
-           VARIABLES ET RESET
+           VARIABLES THEMES (CLAIR / SOMBRE)
         ========================================= */
-        :root {
-            --bg-dark: #0f172a;        /* Fond principal */
-            --bg-card: rgba(30, 41, 59, 0.7); /* Fond des cartes */
-            --text-main: #f8fafc;      /* Texte principal */
-            --text-muted: #94a3b8;     /* Texte secondaire */
-            --accent-primary: #0ea5e9; /* Bleu cyan */
-            --accent-secondary: #3b82f6; /* Bleu roi */
-            --accent-gradient: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
-            --radius: 16px;
-            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        :root[data-theme="dark"] {
+            --bg-main: #0f172a;        
+            --bg-card: rgba(30, 41, 59, 0.7);
+            --bg-nav: rgba(15, 23, 42, 0.85);
+            --text-main: #f8fafc;      
+            --text-muted: #94a3b8;     
+            --accent-primary: #0ea5e9; 
+            --accent-secondary: #3b82f6; 
+            --border-color: rgba(255, 255, 255, 0.05);
+            --shadow-color: rgba(0, 0, 0, 0.4);
+            --shadow-card: 0 10px 30px rgba(0, 0, 0, 0.3);
+            --input-bg: rgba(0, 0, 0, 0.2);
         }
 
+        :root[data-theme="light"] {
+            --bg-main: #f1f5f9;        
+            --bg-card: rgba(255, 255, 255, 0.8);
+            --bg-nav: rgba(255, 255, 255, 0.9);
+            --text-main: #0f172a;      
+            --text-muted: #475569;     
+            --accent-primary: #0284c7; 
+            --accent-secondary: #2563eb; 
+            --border-color: rgba(0, 0, 0, 0.08);
+            --shadow-color: rgba(0, 0, 0, 0.1);
+            --shadow-card: 0 10px 30px rgba(0, 0, 0, 0.08);
+            --input-bg: rgba(255, 255, 255, 0.9);
+        }
+
+        :root {
+            --accent-gradient: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            --radius: 16px;
+            --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* =========================================
+           RESET ET BASE
+        ========================================= */
         * {
             box-sizing: border-box;
             margin: 0;
@@ -39,14 +64,42 @@
 
         body {
             font-family: 'Inter', sans-serif;
-            background-color: var(--bg-dark);
+            background-color: var(--bg-main);
             color: var(--text-main);
             line-height: 1.6;
             overflow-x: hidden;
-            background-image: 
-                radial-gradient(circle at 15% 50%, rgba(14, 165, 233, 0.08) 0%, transparent 50%),
-                radial-gradient(circle at 85% 30%, rgba(59, 130, 246, 0.08) 0%, transparent 50%);
-            background-attachment: fixed;
+            transition: background-color 0.5s ease, color 0.5s ease;
+        }
+
+        /* Fond avec des halos discrets qui s'adaptent au thème */
+        .bg-shapes {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .shape {
+            position: absolute;
+            filter: blur(100px);
+            opacity: 0.15;
+            border-radius: 50%;
+        }
+
+        .shape-1 {
+            top: -10%; left: -10%;
+            width: 50vw; height: 50vw;
+            background: var(--accent-primary);
+        }
+
+        .shape-2 {
+            bottom: -10%; right: -10%;
+            width: 40vw; height: 40vw;
+            background: var(--accent-secondary);
         }
 
         /* =========================================
@@ -74,17 +127,21 @@
 
         .section {
             padding: 100px 0;
+            border-bottom: 1px solid var(--border-color);
         }
+        
+        .section:last-of-type { border-bottom: none; }
 
-        /* Animation Scroll Reveal */
-        .reveal {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: all 0.8s ease-out;
-        }
-        .reveal.active {
+        /* =========================================
+           ANIMATIONS SCROLL REVEAL (Améliorées)
+        ========================================= */
+        .reveal-up { opacity: 0; transform: translateY(40px); transition: all 0.8s ease-out; }
+        .reveal-left { opacity: 0; transform: translateX(-40px); transition: all 0.8s ease-out; }
+        .reveal-right { opacity: 0; transform: translateX(40px); transition: all 0.8s ease-out; }
+        
+        .reveal-up.active, .reveal-left.active, .reveal-right.active {
             opacity: 1;
-            transform: translateY(0);
+            transform: translate(0, 0);
         }
 
         /* =========================================
@@ -108,13 +165,13 @@
 
         .btn.primary {
             background: var(--accent-gradient);
-            color: white;
+            color: #ffffff;
             box-shadow: 0 4px 15px rgba(14, 165, 233, 0.3);
         }
 
         .btn.primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(14, 165, 233, 0.4);
+            box-shadow: 0 6px 20px rgba(14, 165, 233, 0.5);
         }
 
         .btn.outline {
@@ -128,17 +185,15 @@
         }
 
         /* =========================================
-           HEADER & NAVIGATION
+           HEADER & NAVIGATION & THEME TOGGLE
         ========================================= */
         .site-header {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
+            top: 0; left: 0; width: 100%;
             z-index: 1000;
-            background: rgba(15, 23, 42, 0.85);
+            background: var(--bg-nav);
             backdrop-filter: blur(12px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            border-bottom: 1px solid var(--border-color);
             transition: var(--transition);
         }
 
@@ -161,17 +216,15 @@
             width: auto;
             border-radius: 8px;
             object-fit: contain;
+            /* Si l'image est blanche sur fond transparent, l'inverser en mode clair (optionnel) */
         }
 
-        .brand-text {
-            display: flex;
-            flex-direction: column;
-        }
+        .brand-text { display: flex; flex-direction: column; }
 
         .logo-name {
             font-size: 1.3rem;
             font-weight: 800;
-            color: white;
+            color: var(--text-main);
             letter-spacing: 1px;
             line-height: 1.1;
         }
@@ -181,13 +234,11 @@
             font-size: 0.75rem;
             font-weight: 500;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
         }
 
-        .site-nav {
-            display: flex;
-            gap: 5px;
-        }
+        .nav-group { display: flex; align-items: center; gap: 20px; }
+
+        .site-nav { display: flex; gap: 5px; }
 
         .site-nav a {
             color: var(--text-muted);
@@ -199,16 +250,34 @@
             font-weight: 500;
         }
 
-        .site-nav a:hover {
-            color: white;
-            background: rgba(255, 255, 255, 0.05);
+        .site-nav a:hover, .site-nav a.active-link {
+            color: var(--text-main);
+            background: var(--border-color);
+        }
+
+        /* Bouton Theme */
+        .theme-toggle {
+            background: var(--border-color);
+            border: none;
+            color: var(--accent-primary);
+            width: 40px; height: 40px;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: var(--transition);
+        }
+
+        .theme-toggle:hover {
+            transform: rotate(15deg) scale(1.1);
+            background: var(--input-bg);
         }
 
         .nav-toggle {
             display: none;
             background: none;
             border: none;
-            color: white;
+            color: var(--text-main);
             font-size: 1.5rem;
             cursor: pointer;
         }
@@ -245,6 +314,7 @@
         .hero .title {
             font-size: 3.5rem;
             margin-bottom: 24px;
+            color: var(--text-main);
             letter-spacing: -1px;
         }
 
@@ -255,10 +325,7 @@
             max-width: 90%;
         }
 
-        .hero-ctas {
-            display: flex;
-            gap: 16px;
-        }
+        .hero-ctas { display: flex; gap: 16px; }
 
         .hero-photo-wrap {
             position: relative;
@@ -266,32 +333,15 @@
             justify-content: center;
         }
 
-        .hero-photo-wrap::before {
-            content: '';
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            background: var(--accent-gradient);
-            border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
-            filter: blur(40px);
-            opacity: 0.3;
-            animation: morph 8s ease-in-out infinite;
-            z-index: -1;
-        }
-
-        @keyframes morph {
-            0%, 100% { border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%; }
-            50% { border-radius: 70% 30% 30% 70% / 70% 70% 30% 30%; }
-        }
-
         .hero-photo {
             width: 100%;
             max-width: 400px;
-            aspect-ratio: 1/1;
+            aspect-ratio: 1/1; /* Conserve le format carré pour la photo de profil */
             object-fit: cover;
             border-radius: 24px;
-            border: 2px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            border: 2px solid var(--border-color);
+            box-shadow: 0 20px 40px var(--shadow-color);
+            z-index: 2;
         }
 
         /* =========================================
@@ -308,28 +358,14 @@
             width: 100%;
             border-radius: var(--radius);
             box-shadow: 20px 20px 0 rgba(14, 165, 233, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            object-fit: cover;
         }
 
-        .about-text h2 {
-            text-align: left;
-        }
-
-        .about-text p {
-            margin-bottom: 16px;
-            color: var(--text-muted);
-            font-size: 1.1rem;
-        }
-
-        .about-text strong {
-            color: var(--text-main);
-        }
-
-        .about-actions {
-            margin-top: 32px;
-            display: flex;
-            gap: 16px;
-        }
+        .about-text h2 { text-align: left; }
+        .about-text p { margin-bottom: 16px; color: var(--text-muted); font-size: 1.1rem; }
+        .about-text strong { color: var(--text-main); }
+        .about-actions { margin-top: 32px; display: flex; gap: 16px; }
 
         /* =========================================
            PARCOURS (Timeline)
@@ -342,55 +378,35 @@
         }
 
         .timeline::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 0;
-            bottom: 0;
-            width: 2px;
-            background: rgba(255, 255, 255, 0.1);
+            content: ''; position: absolute;
+            left: 0; top: 0; bottom: 0; width: 2px;
+            background: var(--border-color);
         }
 
-        .timeline-item {
-            position: relative;
-            margin-bottom: 40px;
-        }
+        .timeline-item { position: relative; margin-bottom: 40px; }
 
         .timeline-item::before {
-            content: '';
-            position: absolute;
-            left: -36px;
-            top: 6px;
-            width: 14px;
-            height: 14px;
+            content: ''; position: absolute;
+            left: -36px; top: 6px; width: 14px; height: 14px;
             border-radius: 50%;
             background: var(--accent-primary);
             box-shadow: 0 0 10px var(--accent-primary);
         }
 
         .timeline-year {
-            font-weight: 700;
-            color: var(--accent-primary);
-            margin-bottom: 8px;
-            font-size: 1.1rem;
+            font-weight: 700; color: var(--accent-primary);
+            margin-bottom: 8px; font-size: 1.1rem;
         }
 
         .timeline-body {
             background: var(--bg-card);
-            padding: 24px;
-            border-radius: var(--radius);
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 24px; border-radius: var(--radius);
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-card);
         }
 
-        .timeline-body h3 {
-            margin-bottom: 8px;
-            font-size: 1.2rem;
-            color: white;
-        }
-
-        .timeline-body p {
-            color: var(--text-muted);
-        }
+        .timeline-body h3 { margin-bottom: 8px; font-size: 1.2rem; color: var(--text-main); }
+        .timeline-body p { color: var(--text-muted); }
 
         /* =========================================
            SERVICES
@@ -403,122 +419,106 @@
 
         .card {
             background: var(--bg-card);
-            padding: 32px;
-            border-radius: var(--radius);
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 32px; border-radius: var(--radius);
+            border: 1px solid var(--border-color);
             transition: var(--transition);
             backdrop-filter: blur(10px);
+            box-shadow: var(--shadow-card);
         }
 
         .card:hover {
             transform: translateY(-10px);
-            border-color: rgba(14, 165, 233, 0.3);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border-color: var(--accent-primary);
+            box-shadow: 0 15px 35px var(--shadow-color);
         }
 
-        .card-icon {
-            font-size: 2.5rem;
-            color: var(--accent-primary);
-            margin-bottom: 20px;
-        }
-
-        .card h3 {
-            margin-bottom: 12px;
-            font-size: 1.25rem;
-        }
-
-        .card p {
-            color: var(--text-muted);
-            font-size: 0.95rem;
-        }
+        .card-icon { font-size: 2.5rem; color: var(--accent-primary); margin-bottom: 20px; }
+        .card h3 { margin-bottom: 12px; font-size: 1.25rem; color: var(--text-main); }
+        .card p { color: var(--text-muted); font-size: 0.95rem; }
 
         /* =========================================
            COMPETENCES
         ========================================= */
-        .skills-container {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        .skill {
-            margin-bottom: 24px;
-        }
-
-        .skill-head {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 8px;
-            font-weight: 500;
-        }
-
-        .skill-head span:last-child {
-            color: var(--accent-primary);
-        }
-
+        .skills-container { max-width: 800px; margin: 0 auto; }
+        .skill { margin-bottom: 24px; }
+        .skill-head { display: flex; justify-content: space-between; margin-bottom: 8px; font-weight: 500; color: var(--text-main); }
+        .skill-head span:last-child { color: var(--accent-primary); }
+        
         .skill-bar-bg {
-            background: rgba(255, 255, 255, 0.05);
-            height: 8px;
-            border-radius: 4px;
-            overflow: hidden;
+            background: var(--border-color);
+            height: 10px; border-radius: 5px; overflow: hidden;
         }
 
         .skill-bar {
             height: 100%;
             background: var(--accent-gradient);
-            border-radius: 4px;
-            width: 0; /* Animated via JS */
+            border-radius: 5px;
+            width: 0; /* Animé par JS */
             transition: width 1.5s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
 
         /* =========================================
-           PROJETS & GRAPHISME
+           PROJETS & GRAPHISME (CORRIGÉ - IMAGES ENTIÈRES)
         ========================================= */
         .gallery-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
         }
 
         .gallery-item {
-            position: relative;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
             border-radius: var(--radius);
-            overflow: hidden;
-            aspect-ratio: 4/3;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            group: hover;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            box-shadow: var(--shadow-card);
+            transition: var(--transition);
         }
 
-        .gallery-item img, .gallery-item video {
+        .gallery-item:hover {
+            transform: translateY(-8px);
+            border-color: var(--accent-primary);
+        }
+
+        .gallery-img-container {
+            width: 100%;
+            height: 220px; /* Hauteur fixe pour l'alignement de la grille */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.03); /* Fond discret pour les PNG transparents */
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        [data-theme="dark"] .gallery-img-container {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        /* LE SECRET POUR NE PLUS COUPER LES IMAGES : object-fit: contain */
+        .gallery-item img {
             width: 100%;
             height: 100%;
-            object-fit: cover;
-            transition: var(--transition);
+            object-fit: contain; 
+            transition: transform 0.4s ease;
         }
 
         .gallery-item:hover img {
-            transform: scale(1.05);
+            transform: scale(1.05); /* Léger zoom sans déborder du contain */
         }
 
         .gallery-caption {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: linear-gradient(to top, rgba(15, 23, 42, 0.9), transparent);
-            padding: 24px 16px 16px;
-            transform: translateY(100%);
-            transition: var(--transition);
-        }
-
-        .gallery-item:hover .gallery-caption {
-            transform: translateY(0);
+            text-align: center;
         }
 
         .gallery-caption p {
             margin: 0;
             font-weight: 600;
-            color: white;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+            color: var(--text-main);
+            font-size: 1.05rem;
         }
 
         /* =========================================
@@ -531,27 +531,19 @@
             align-items: center;
         }
         
-        .cp-info h2 {
-            text-align: left;
-            margin-bottom: 16px;
-        }
-
-        .cp-info p {
-            color: var(--text-muted);
-            font-size: 1.1rem;
-            margin-bottom: 24px;
-        }
+        .cp-info h2 { text-align: left; margin-bottom: 16px; }
+        .cp-info p { color: var(--text-muted); font-size: 1.1rem; margin-bottom: 24px; }
 
         .business-card-modern {
             position: relative;
-            background: rgba(30, 41, 59, 0.4);
+            background: var(--bg-card);
             backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--border-color);
             border-radius: 24px;
             padding: 32px;
             width: 100%;
             max-width: 450px;
-            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            box-shadow: var(--shadow-card);
             overflow: hidden;
             margin: 0 auto;
             transform-style: preserve-3d;
@@ -560,108 +552,52 @@
 
         .business-card-modern:hover {
             transform: translateY(-5px) scale(1.02);
-            border-color: rgba(14, 165, 233, 0.3);
-            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            border-color: var(--accent-primary);
         }
 
         .bc-circle-1, .bc-circle-2 {
-            position: absolute;
-            border-radius: 50%;
-            filter: blur(40px);
-            z-index: -1;
-            transition: all 0.5s ease;
+            position: absolute; border-radius: 50%; filter: blur(40px);
+            z-index: -1; transition: all 0.5s ease;
         }
 
-        .business-card-modern:hover .bc-circle-1 {
-            transform: scale(1.2) translate(-10px, 10px);
-            opacity: 0.6;
-        }
-
-        .business-card-modern:hover .bc-circle-2 {
-            transform: scale(1.2) translate(10px, -10px);
-            opacity: 0.5;
-        }
+        .business-card-modern:hover .bc-circle-1 { transform: scale(1.2) translate(-10px, 10px); opacity: 0.6; }
+        .business-card-modern:hover .bc-circle-2 { transform: scale(1.2) translate(10px, -10px); opacity: 0.5; }
 
         .bc-circle-1 {
-            top: -50px;
-            right: -50px;
-            width: 150px;
-            height: 150px;
-            background: var(--accent-primary);
-            opacity: 0.3;
+            top: -50px; right: -50px; width: 150px; height: 150px;
+            background: var(--accent-primary); opacity: 0.2;
         }
 
         .bc-circle-2 {
-            bottom: -50px;
-            left: -50px;
-            width: 100px;
-            height: 100px;
-            background: var(--accent-secondary);
-            opacity: 0.2;
+            bottom: -50px; left: -50px; width: 100px; height: 100px;
+            background: var(--accent-secondary); opacity: 0.15;
         }
 
-        .bc-top {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 40px;
-        }
-
-        .bc-logo-img {
-            height: 48px;
-            border-radius: 12px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-        }
-
+        .bc-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 40px; }
+        .bc-logo-img { height: 48px; border-radius: 8px; object-fit: contain; }
+        
         .bc-role {
-            text-align: right;
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-weight: 600;
+            text-align: right; font-size: 0.85rem; color: var(--text-muted);
+            text-transform: uppercase; letter-spacing: 1px; font-weight: 600;
         }
 
-        .bc-middle {
-            margin-bottom: 30px;
-        }
+        .bc-middle { margin-bottom: 30px; }
+        .bc-middle h3 { font-size: 1.8rem; margin-bottom: 4px; color: var(--text-main); letter-spacing: -0.5px; }
+        .bc-company { color: var(--accent-primary); font-weight: 600; font-size: 1.1rem; }
 
-        .bc-middle h3 {
-            font-size: 1.8rem;
-            margin-bottom: 4px;
-            color: white;
-            letter-spacing: -0.5px;
-        }
-
-        .bc-company {
-            color: var(--accent-primary);
-            font-weight: 600;
-            font-size: 1.1rem;
-        }
-
-        .bc-bottom {
-            display: flex;
-            flex-direction: column;
-            gap: 14px;
-        }
-
+        .bc-bottom { display: flex; flex-direction: column; gap: 14px; }
+        
         .bc-contact-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-size: 0.95rem;
-            color: var(--text-main);
+            display: flex; align-items: center; gap: 12px;
+            font-size: 0.95rem; color: var(--text-main);
         }
 
         .bc-contact-item i {
             color: var(--accent-primary);
-            width: 24px;
-            height: 24px;
+            width: 28px; height: 28px;
             background: rgba(14, 165, 233, 0.1);
             border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            display: flex; align-items: center; justify-content: center;
             font-size: 0.9rem;
         }
 
@@ -669,189 +605,92 @@
            CV & CONTACT
         ========================================= */
         .cv-modern-wrap {
-            background: linear-gradient(145deg, rgba(30, 41, 59, 0.6), rgba(15, 23, 42, 0.9));
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 24px;
-            padding: 48px;
-            display: flex;
-            align-items: center;
-            gap: 40px;
-            max-width: 900px;
-            margin: 0 auto;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 24px; padding: 48px;
+            display: flex; align-items: center; gap: 40px;
+            max-width: 900px; margin: 0 auto;
+            box-shadow: var(--shadow-card);
             backdrop-filter: blur(10px);
         }
 
         .cv-icon-large {
-            font-size: 4rem;
-            color: var(--accent-primary);
-            background: rgba(14, 165, 233, 0.1);
-            width: 120px;
-            height: 120px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            flex-shrink: 0;
-            box-shadow: inset 0 0 20px rgba(14, 165, 233, 0.2);
-            border: 1px solid rgba(14, 165, 233, 0.2);
+            font-size: 4rem; color: #ef4444; /* Rouge PDF */
+            background: rgba(239, 68, 68, 0.1);
+            width: 120px; height: 120px;
+            display: flex; align-items: center; justify-content: center;
+            border-radius: 50%; flex-shrink: 0;
+            border: 1px solid rgba(239, 68, 68, 0.2);
         }
 
-        .cv-content h3 {
-            font-size: 1.8rem;
-            margin-bottom: 12px;
-            color: white;
-        }
-
-        .cv-content p {
-            color: var(--text-muted);
-            font-size: 1.1rem;
-            margin-bottom: 24px;
-        }
-
-        .cv-buttons {
-            display: flex;
-            gap: 16px;
-        }
+        .cv-content h3 { font-size: 1.8rem; margin-bottom: 12px; color: var(--text-main); }
+        .cv-content p { color: var(--text-muted); font-size: 1.1rem; margin-bottom: 24px; }
+        .cv-buttons { display: flex; gap: 16px; }
 
         .contact-grid {
-            display: grid;
-            grid-template-columns: 1fr 1.5fr;
-            gap: 40px;
+            display: grid; grid-template-columns: 1fr 1.5fr; gap: 40px;
         }
 
         .contact-info {
-            padding: 32px;
-            background: var(--bg-card);
-            border-radius: var(--radius);
+            padding: 32px; background: var(--bg-card);
+            border-radius: var(--radius); border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-card);
         }
 
-        .contact-info h3 {
-            font-size: 1.5rem;
-            margin-bottom: 8px;
-        }
+        .contact-info h3 { font-size: 1.5rem; margin-bottom: 8px; color: var(--text-main); }
+        .contact-info p { color: var(--text-muted); margin-bottom: 24px; }
 
-        .contact-info p {
-            color: var(--text-muted);
-            margin-bottom: 24px;
-        }
-
-        .contact-details {
-            list-style: none;
-        }
-
+        .contact-details { list-style: none; }
         .contact-details li {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            margin-bottom: 16px;
-            color: var(--text-main);
+            display: flex; align-items: center; gap: 16px; margin-bottom: 16px; color: var(--text-main);
         }
 
         .contact-details i {
-            background: rgba(14, 165, 233, 0.1);
-            color: var(--accent-primary);
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.1rem;
+            background: rgba(14, 165, 233, 0.1); color: var(--accent-primary);
+            width: 40px; height: 40px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; font-size: 1.1rem;
         }
 
-        .contact-form {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
+        .contact-form { display: flex; flex-direction: column; gap: 20px; }
+        .form-group { display: flex; flex-direction: column; gap: 8px; }
+        .form-group label { font-size: 0.9rem; color: var(--text-muted); font-weight: 500; }
+
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%; padding: 14px 16px; border-radius: 8px;
+            border: 1px solid var(--border-color);
+            background: var(--input-bg); color: var(--text-main);
+            font-family: inherit; font-size: 1rem; transition: var(--transition);
         }
 
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
+        .form-group select option { background: var(--bg-main); color: var(--text-main); }
 
-        .form-group label {
-            font-size: 0.9rem;
-            color: var(--text-muted);
-            font-weight: 500;
-        }
-
-        .form-group input, 
-        .form-group select, 
-        .form-group textarea {
-            width: 100%;
-            padding: 14px 16px;
-            border-radius: 8px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            background: rgba(0, 0, 0, 0.2);
-            color: white;
-            font-family: inherit;
-            font-size: 1rem;
-            transition: var(--transition);
-        }
-
-        .form-group select option {
-            background: var(--bg-dark);
-            color: white;
-        }
-
-        .form-group input:focus, 
-        .form-group select:focus, 
-        .form-group textarea:focus {
-            outline: none;
-            border-color: var(--accent-primary);
-            background: rgba(0, 0, 0, 0.4);
-            box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.1);
-        }
-
-        .form-actions {
-            display: flex;
-            gap: 16px;
-            margin-top: 8px;
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            outline: none; border-color: var(--accent-primary);
+            box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.15);
         }
 
         /* =========================================
            FOOTER
         ========================================= */
         .site-footer {
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
-            padding: 32px 0;
-            background: #090e17;
-            color: var(--text-muted);
+            border-top: 1px solid var(--border-color);
+            padding: 32px 0; background: var(--bg-card); color: var(--text-muted);
         }
 
         .footer-inner {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 16px;
+            display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;
         }
 
-        .socials {
-            display: flex;
-            gap: 16px;
-        }
+        .socials { display: flex; gap: 16px; }
 
         .socials a {
-            color: var(--text-muted);
-            text-decoration: none;
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.05);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: var(--transition);
+            color: var(--text-muted); text-decoration: none; width: 36px; height: 36px;
+            border-radius: 50%; background: var(--border-color);
+            display: flex; align-items: center; justify-content: center; transition: var(--transition);
         }
 
         .socials a:hover {
-            background: var(--accent-primary);
-            color: white;
-            transform: translateY(-3px);
+            background: var(--accent-primary); color: #fff; transform: translateY(-3px);
         }
 
         /* =========================================
@@ -878,44 +717,38 @@
         }
 
         @media (max-width: 768px) {
+            .nav-group { flex-direction: row-reverse; gap: 12px; }
             .nav-toggle { display: block; }
             
             .site-nav {
-                position: absolute;
-                top: 80px;
-                left: 0;
-                width: 100%;
-                background: rgba(15, 23, 42, 0.98);
-                flex-direction: column;
-                padding: 24px;
-                gap: 16px;
-                border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+                position: absolute; top: 80px; left: 0; width: 100%;
+                background: var(--bg-nav); flex-direction: column;
+                padding: 24px; gap: 16px;
+                border-bottom: 1px solid var(--border-color);
                 clip-path: polygon(0 0, 100% 0, 100% 0, 0 0);
                 transition: clip-path 0.4s ease-in-out;
             }
 
-            .site-nav.open {
-                clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
-            }
+            .site-nav.open { clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); }
 
-            .site-nav a {
-                font-size: 1.1rem;
-                padding: 12px;
-                text-align: center;
-            }
-
+            .site-nav a { font-size: 1.1rem; padding: 12px; text-align: center; }
             h2 { font-size: 2rem; }
             .section { padding: 60px 0; }
         }
     </style>
 </head>
 <body>
+    
+    <!-- Éléments de fond décoratifs -->
+    <div class="bg-shapes">
+        <div class="shape shape-1"></div>
+        <div class="shape shape-2"></div>
+    </div>
 
     <!-- HEADER -->
     <header class="site-header">
         <div class="container header-inner">
             <a href="#home" class="brand">
-                <!-- Remplacer logo.jpg par le chemin réel de ton logo -->
                 <img src="logo.jpg" alt="Logo GéNova" class="brand-logo" onerror="this.src='https://placehold.co/100x40/0ea5e9/ffffff?text=LOGO'">
                 <div class="brand-text">
                     <span class="logo-name">GéNova</span>
@@ -923,9 +756,16 @@
                 </div>
             </a>
             
-            <button class="nav-toggle" aria-label="Menu" id="mobile-menu-btn">
-                <i class="fas fa-bars"></i>
-            </button>
+            <div class="nav-group">
+                <!-- Bouton Theme Dark/Light -->
+                <button id="theme-toggle" class="theme-toggle" aria-label="Changer le thème">
+                    <i class="fas fa-sun"></i> <!-- Changé dynamiquement en JS -->
+                </button>
+
+                <button class="nav-toggle" aria-label="Menu" id="mobile-menu-btn">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
 
             <nav class="site-nav" id="main-nav">
                 <a href="#home">Accueil</a>
@@ -943,7 +783,7 @@
         <!-- HERO SECTION -->
         <section id="home" class="hero">
             <div class="container hero-grid">
-                <div class="hero-text reveal">
+                <div class="hero-text reveal-left">
                     <span class="hi">👋 Bonjour, je suis Géraud</span>
                     <h1 class="title">Développeur Web & Technicien Informatique</h1>
                     <p class="subtitle">
@@ -955,20 +795,19 @@
                     </div>
                 </div>
 
-                <div class="hero-photo-wrap reveal" style="transition-delay: 0.2s;">
-                    <!-- Placeholder de qualité pour remplacer l'image locale en attendant -->
-                    <img src="moi.jpg" alt="Géraud - Profil" class="hero-photo">
+                <div class="hero-photo-wrap reveal-right" style="transition-delay: 0.2s;">
+                    <img src="moi.jpg" alt="Géraud - Profil" class="hero-photo" onerror="this.src='https://placehold.co/400x400/1e293b/0ea5e9?text=Géraud'">
                 </div>
             </div>
         </section>
 
         <!-- A PROPOS -->
-        <section id="about" class="section" style="background: rgba(255,255,255,0.01);">
+        <section id="about" class="section">
             <div class="container about-grid">
-                <div class="about-photo reveal">
-                    <img src="Genova.jpeg" alt="Espace de travail GéNova">
+                <div class="about-photo reveal-left">
+                    <img src="Genova.jpeg" alt="Espace de travail GéNova" onerror="this.src='https://placehold.co/600x400/1e293b/0ea5e9?text=Espace+de+travail'">
                 </div>
-                <div class="about-text reveal" style="transition-delay: 0.2s;">
+                <div class="about-text reveal-right" style="transition-delay: 0.2s;">
                     <h2>À propos de moi</h2>
                     <p>
                         Informaticien et développeur web freelance, passionné par les technologies numériques et l'innovation. À travers ma micro-entreprise <strong>GéNova</strong>, j’accompagne les PME dans la création, l’optimisation et la maintenance de leurs solutions digitales.
@@ -991,10 +830,10 @@
         <!-- PARCOURS -->
         <section id="parcours" class="section">
             <div class="container">
-                <h2 class="reveal">Mon Parcours</h2>
+                <h2 class="reveal-up">Mon Parcours</h2>
                 <div class="timeline">
                     
-                    <div class="timeline-item reveal">
+                    <div class="timeline-item reveal-left">
                         <div class="timeline-year">2025 — Aujourd'hui</div>
                         <div class="timeline-body">
                             <h3>GéNova — Freelance</h3>
@@ -1002,7 +841,7 @@
                         </div>
                     </div>
 
-                    <div class="timeline-item reveal">
+                    <div class="timeline-item reveal-right">
                         <div class="timeline-year">2025</div>
                         <div class="timeline-body">
                             <h3>Diplôme Technicien (DT-IMI) & Dev Web</h3>
@@ -1010,7 +849,7 @@
                         </div>
                     </div>
 
-                    <div class="timeline-item reveal">
+                    <div class="timeline-item reveal-left">
                         <div class="timeline-year">2023 — 2025</div>
                         <div class="timeline-body">
                             <h3>Stage technique en Entreprise</h3>
@@ -1023,42 +862,42 @@
         </section>
 
         <!-- SERVICES -->
-        <section id="services" class="section" style="background: rgba(255,255,255,0.01);">
+        <section id="services" class="section">
             <div class="container">
-                <h2 class="reveal">Mes Services</h2>
+                <h2 class="reveal-up">Mes Services</h2>
                 <div class="cards-grid">
                     
-                    <article class="card reveal">
+                    <article class="card reveal-up">
                         <i class="fas fa-laptop-code card-icon"></i>
                         <h3>Création de site web</h3>
                         <p>Conception de sites vitrines modernes, responsives et parfaitement optimisés pour le référencement (SEO).</p>
                     </article>
 
-                    <article class="card reveal" style="transition-delay: 0.1s;">
+                    <article class="card reveal-up" style="transition-delay: 0.1s;">
                         <i class="fas fa-server card-icon"></i>
                         <h3>Installation & Maintenance</h3>
                         <p>Mise en place d'infrastructures informatiques, maintenance préventive matérielle et logicielle.</p>
                     </article>
 
-                    <article class="card reveal" style="transition-delay: 0.2s;">
+                    <article class="card reveal-up" style="transition-delay: 0.2s;">
                         <i class="fas fa-headset card-icon"></i>
                         <h3>Support Technique</h3>
                         <p>Assistance rapide à distance ou sur site. Diagnostic précis et dépannage fiable de vos équipements.</p>
                     </article>
 
-                    <article class="card reveal" style="transition-delay: 0.3s;">
+                    <article class="card reveal-up" style="transition-delay: 0.3s;">
                         <i class="fas fa-shopping-cart card-icon"></i>
                         <h3>Site E-commerce</h3>
                         <p>Développement de boutiques en ligne sécurisées, intuitives et faciles à gérer au quotidien.</p>
                     </article>
 
-                    <article class="card reveal" style="transition-delay: 0.4s;">
+                    <article class="card reveal-up" style="transition-delay: 0.4s;">
                         <i class="fas fa-pen-nib card-icon"></i>
                         <h3>Design Graphique</h3>
                         <p>Création d'identités visuelles impactantes : logos, flyers, affiches et supports digitaux pour vos réseaux sociaux.</p>
                     </article>
 
-                    <article class="card reveal" style="transition-delay: 0.5s;">
+                    <article class="card reveal-up" style="transition-delay: 0.5s;">
                         <i class="fas fa-shield-halved card-icon"></i>
                         <h3>Optimisation & Sécurité</h3>
                         <p>Tuning des performances de vos systèmes et renforcement proactif de la sécurité de vos données.</p>
@@ -1071,35 +910,35 @@
         <!-- COMPETENCES -->
         <section id="skills" class="section">
             <div class="container">
-                <h2 class="reveal">Mes Compétences</h2>
+                <h2 class="reveal-up">Mes Compétences</h2>
                 <div class="skills-container">
                     
-                    <div class="skill reveal">
+                    <div class="skill reveal-right">
                         <div class="skill-head"><span>HTML5 / Structure</span><span>100%</span></div>
                         <div class="skill-bar-bg"><div class="skill-bar" data-width="100%"></div></div>
                     </div>
 
-                    <div class="skill reveal">
+                    <div class="skill reveal-left">
                         <div class="skill-head"><span>CSS3 / Design UI</span><span>95%</span></div>
                         <div class="skill-bar-bg"><div class="skill-bar" data-width="95%"></div></div>
                     </div>
 
-                    <div class="skill reveal">
+                    <div class="skill reveal-right">
                         <div class="skill-head"><span>Maintenance & Réseaux</span><span>90%</span></div>
                         <div class="skill-bar-bg"><div class="skill-bar" data-width="90%"></div></div>
                     </div>
 
-                    <div class="skill reveal">
+                    <div class="skill reveal-left">
                         <div class="skill-head"><span>Design Graphique</span><span>85%</span></div>
                         <div class="skill-bar-bg"><div class="skill-bar" data-width="85%"></div></div>
                     </div>
 
-                    <div class="skill reveal">
+                    <div class="skill reveal-right">
                         <div class="skill-head"><span>Langage C</span><span>70%</span></div>
                         <div class="skill-bar-bg"><div class="skill-bar" data-width="70%"></div></div>
                     </div>
 
-                    <div class="skill reveal">
+                    <div class="skill reveal-left">
                         <div class="skill-head"><span>Virtualisation</span><span>60%</span></div>
                         <div class="skill-bar-bg"><div class="skill-bar" data-width="60%"></div></div>
                     </div>
@@ -1108,31 +947,39 @@
             </div>
         </section>
 
-        <!-- PROJETS & GRAPHISME COMBINÉS -->
-        <section id="projects" class="section" style="background: rgba(255,255,255,0.01);">
+        <!-- PROJETS & GRAPHISME COMBINÉS (CORRIGÉ POUR IMAGES ENTIERES) -->
+        <section id="projects" class="section">
             <div class="container">
-                <h2 class="reveal">Portfolio & Réalisations</h2>
+                <h2 class="reveal-up">Portfolio & Réalisations</h2>
                 
-                <!-- Remplacés par des images Unsplash pour la démo, remplacez les "src" par vos vrais chemins locaux -->
                 <div class="gallery-grid">
                     
-                    <div class="gallery-item reveal">
-                        <img src="projet1.PNG" alt="Site vitrine">
+                    <!-- Carte Projet avec object-fit: contain -->
+                    <div class="gallery-item reveal-up">
+                        <div class="gallery-img-container">
+                            <img src="projet1.PNG" alt="Site vitrine" onerror="this.src='https://placehold.co/600x400/1e293b/0ea5e9?text=Projet+1'">
+                        </div>
                         <div class="gallery-caption"><p>Projet 1 — Site vitrine</p></div>
                     </div>
 
-                    <div class="gallery-item reveal" style="transition-delay: 0.1s;">
-                        <img src="projet2.jpg" alt="Réseaux & Installation">
+                    <div class="gallery-item reveal-up" style="transition-delay: 0.1s;">
+                        <div class="gallery-img-container">
+                            <img src="projet2.jpg" alt="Réseaux & Installation" onerror="this.src='https://placehold.co/600x400/1e293b/0ea5e9?text=Projet+2'">
+                        </div>
                         <div class="gallery-caption"><p>Projet 2 — Installation Réseau / Antenne</p></div>
                     </div>
 
-                    <div class="gallery-item reveal" style="transition-delay: 0.2s;">
-                        <img src="projet3.jpeg" alt="Design Graphique">
+                    <div class="gallery-item reveal-up" style="transition-delay: 0.2s;">
+                        <div class="gallery-img-container">
+                            <img src="projet3.jpeg" alt="Design Graphique" onerror="this.src='https://placehold.co/600x400/1e293b/0ea5e9?text=Projet+3'">
+                        </div>
                         <div class="gallery-caption"><p>Projet 3 — Création de Flyers</p></div>
                     </div>
 
-                    <div class="gallery-item reveal" style="transition-delay: 0.3s;">
-                        <img src="https://images.unsplash.com/photo-1558655146-d09347e92766?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Design Branding">
+                    <div class="gallery-item reveal-up" style="transition-delay: 0.3s;">
+                        <div class="gallery-img-container">
+                            <img src="logo.jpg" alt="Identité Visuelle" onerror="this.src='https://placehold.co/600x400/1e293b/0ea5e9?text=Logo+GeNova'">
+                        </div>
                         <div class="gallery-caption"><p>Projet 4 — Identité visuelle</p></div>
                     </div>
 
@@ -1144,18 +991,17 @@
         <section id="CP" class="section">
             <div class="container">
                 <div class="cp-layout">
-                    <div class="cp-info reveal">
+                    <div class="cp-info reveal-left">
                         <span class="hi">Digital</span>
                         <h2>Ma Carte de Visite</h2>
                         <p>Gardez mes coordonnées à portée de main ! Enregistrez directement mes informations pour vos futurs projets informatiques et de développement web.</p>
                         <a href="#contact" class="btn primary"><i class="fas fa-address-book"></i> M'ajouter à vos contacts</a>
                     </div>
                     
-                    <div class="cp-wrapper reveal" style="transition-delay: 0.2s;">
+                    <div class="cp-wrapper reveal-right" style="transition-delay: 0.2s;">
                         <div class="business-card-modern">
                             <div class="bc-top">
-                                <!-- Remplacer logo.jpg par ton logo -->
-                                <img src="logo.jpg" alt="Logo" class="bc-logo-img" onerror="this.src='https://placehold.co/50x50/0ea5e9/ffffff?text=G'">
+                                <img src="logo.jpg" alt="Logo" class="bc-logo-img" onerror="this.src='https://placehold.co/100x48/0ea5e9/ffffff?text=GN'">
                                 <div class="bc-role">Technicien Informatique<br>& Développeur Web</div>
                             </div>
                             <div class="bc-middle">
@@ -1177,11 +1023,11 @@
         </section>
 
         <!-- CV SECTION -->
-        <section id="CV" class="section" style="background: rgba(255,255,255,0.01);">
+        <section id="CV" class="section">
             <div class="container">
-                <h2 class="reveal">Curriculum Vitae</h2>
+                <h2 class="reveal-up">Curriculum Vitae</h2>
                 
-                <div class="cv-modern-wrap reveal">
+                <div class="cv-modern-wrap reveal-up">
                     <div class="cv-icon-large">
                         <i class="fas fa-file-pdf"></i>
                     </div>
@@ -1201,11 +1047,11 @@
         <!-- CONTACT -->
         <section id="contact" class="section">
             <div class="container">
-                <h2 class="reveal">Contactez-moi</h2>
+                <h2 class="reveal-up">Contactez-moi</h2>
                 
                 <div class="contact-grid">
                     
-                    <div class="contact-info reveal">
+                    <div class="contact-info reveal-left">
                         <h3>Démarrons un projet ensemble</h3>
                         <p>Vous avez besoin d'un dépannage informatique, d'un site web ou d'une affiche ? N'hésitez pas à m'écrire, je réponds rapidement.</p>
                         
@@ -1225,7 +1071,7 @@
                         </ul>
                     </div>
 
-                    <form class="contact-form reveal" style="transition-delay: 0.2s;" onsubmit="alert('Merci pour votre message ! (Ceci est une simulation de formulaire)'); return false;">
+                    <form class="contact-form reveal-right" style="transition-delay: 0.2s;" onsubmit="alert('Merci pour votre message ! (Ceci est une simulation de formulaire)'); return false;">
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
                             <div class="form-group">
                                 <label for="name">Nom complet</label>
@@ -1281,7 +1127,36 @@
         // 1. Année dynamique dans le footer
         document.getElementById('year').textContent = new Date().getFullYear();
 
-        // 2. Gestion du menu mobile
+        // 2. Gestion du Thème (Light / Dark)
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const themeIcon = themeToggleBtn.querySelector('i');
+        const htmlElement = document.documentElement;
+        
+        // Vérifier si un thème est sauvegardé
+        const savedTheme = localStorage.getItem('genova-theme') || 'dark';
+        htmlElement.setAttribute('data-theme', savedTheme);
+        updateThemeIcon(savedTheme);
+
+        themeToggleBtn.addEventListener('click', () => {
+            const currentTheme = htmlElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            htmlElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('genova-theme', newTheme);
+            updateThemeIcon(newTheme);
+        });
+
+        function updateThemeIcon(theme) {
+            if(theme === 'light') {
+                themeIcon.classList.remove('fa-sun');
+                themeIcon.classList.add('fa-moon');
+            } else {
+                themeIcon.classList.remove('fa-moon');
+                themeIcon.classList.add('fa-sun');
+            }
+        }
+
+        // 3. Gestion du menu mobile
         const btn = document.getElementById('mobile-menu-btn');
         const nav = document.getElementById('main-nav');
         const icon = btn.querySelector('i');
@@ -1297,7 +1172,7 @@
             }
         });
 
-        // 3. Smooth scroll et fermeture du menu mobile au clic
+        // 4. Smooth scroll et fermeture du menu mobile au clic
         document.querySelectorAll('.site-nav a').forEach(link => {
             link.addEventListener('click', e => {
                 const targetId = link.getAttribute('href');
@@ -1315,8 +1190,8 @@
             });
         });
 
-        // 4. Animations au scroll (Intersection Observer)
-        const revealElements = document.querySelectorAll('.reveal');
+        // 5. Animations au scroll (Intersection Observer amélioré)
+        const revealElements = document.querySelectorAll('.reveal-up, .reveal-left, .reveal-right');
         
         const revealOptions = {
             threshold: 0.15,
@@ -1335,10 +1210,9 @@
                     const bar = entry.target.querySelector('.skill-bar');
                     if (bar) {
                         const width = bar.getAttribute('data-width');
-                        // Petit délai pour l'effet visuel
                         setTimeout(() => {
                             bar.style.width = width;
-                        }, 300);
+                        }, 200);
                     }
                 }
                 
